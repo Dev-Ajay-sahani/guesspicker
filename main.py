@@ -6,7 +6,7 @@ from threading import Thread
 from flask import Flask
 from dotenv import load_dotenv
 
-# Load environment variables from .env (optional for local dev)
+# Load environment variables from .env
 load_dotenv()
 
 # Config
@@ -53,19 +53,24 @@ def guess_loop():
             send_message(CHANNEL_ID, str(guess - 1))
             time.sleep(random.uniform(MIN_DELAY, MAX_DELAY))
 
-# Start guessing in background
-@app.before_first_request
-def start_thread():
-    t = Thread(target=guess_loop)
-    t.daemon = True
-    t.start()
+# Start background thread only once
+started = False
+
+@app.before_request
+def start_thread_once():
+    global started
+    if not started:
+        started = True
+        t = Thread(target=guess_loop)
+        t.daemon = True
+        t.start()
 
 # Root route
 @app.route('/')
 def home():
     return "Guesser Bot is running."
 
-# Run app on Render-compatible port
+# Run app
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
