@@ -1,12 +1,17 @@
 import requests
 import time
 import random
+import os
 from threading import Thread
 from flask import Flask
+from dotenv import load_dotenv
+
+# Load environment variables from .env (optional for local dev)
+load_dotenv()
 
 # Config
-TOKEN = ""
-CHANNEL_ID = "1380950004667252786"
+TOKEN = os.environ.get("DISCORD_TOKEN")
+CHANNEL_ID = os.environ.get("CHANNEL_ID", "1380950004667252786")
 LOW = 100000
 HIGH = 500000
 MIN_DELAY = 1.6
@@ -48,18 +53,19 @@ def guess_loop():
             send_message(CHANNEL_ID, str(guess - 1))
             time.sleep(random.uniform(MIN_DELAY, MAX_DELAY))
 
-# Start background thread on server start
+# Start guessing in background
 @app.before_first_request
 def start_thread():
     t = Thread(target=guess_loop)
     t.daemon = True
     t.start()
 
-# Home route to keep Render happy
+# Root route
 @app.route('/')
 def home():
     return "Guesser Bot is running."
 
-# Run app
+# Run app on Render-compatible port
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=10000)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
