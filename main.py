@@ -14,8 +14,8 @@ TOKEN = os.environ.get("DISCORD_TOKEN")
 CHANNEL_ID = os.environ.get("CHANNEL_ID", "1380950004667252786")
 LOW = 100000
 HIGH = 250000
-MIN_DELAY = 1.8
-MAX_DELAY = 2.1
+MIN_DELAY = 1.6
+MAX_DELAY = 1.7
 
 # Flask app
 app = Flask(__name__)
