@@ -12,7 +12,7 @@ load_dotenv()
 # Config
 TOKEN = os.environ.get("DISCORD_TOKEN")
 CHANNEL_ID = os.environ.get("CHANNEL_ID", "1380950004667252786")
-LOW = 100000
+LOW = 250000
 HIGH = 500000
 MIN_DELAY = 1.6
 MAX_DELAY = 1.7
